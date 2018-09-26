@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ArtifactManager">
+    <artifact type="exploded-war" name="BoogalooBookstore:war exploded">
+      <output-path>$PROJECT_DIR$/out/artifacts/BoogalooBookstore_war_exploded</output-path>
+      <root id="root">
+        <element id="javaee-facet-resources" facet="BoogalooBookstore/web/Web" />
+        <element id="directory" name="WEB-INF">
+          <element id="directory" name="classes">
+            <element id="module-output" name="BoogalooBookstore" />
+          </element>
+          <element id="directory" name="lib">
+            <element id="library" level="project" name="mysql-connector-java-8.0.12" />
+          </element>
+        </element>
+      </root>
+    </artifact>
+    <artifact type="war" name="BoogalooBookstore:war">
+      <output-path>$PROJECT_DIR$/out/artifacts/BoogalooBookstore_war</output-path>
+      <root id="archive" name="BoogalooBookstore_war.war">
+        <element id="javaee-facet-resources" facet="BoogalooBookstore/web/Web" />
+        <element id="directory" name="WEB-INF">
+          <element id="directory" name="classes">
+            <element id="module-output" name="BoogalooBookstore" />
+          </element>
+          <element id="directory" name="lib">
+            <element id="library" level="project" name="mysql-connector-java-8.0.12" />
+          </element>
+        </element>
+      </root>
+    </artifact>
+  </component>
+  <component name="InspectionProjectProfileManager">
+    <profile version="1.0">
+      <option name="myName" value="Project Default" />
+    </profile>
+    <version value="1.0" />
+  </component>
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/BoogalooBookstore.iml" filepath="$PROJECT_DIR$/BoogalooBookstore.iml" />
+    </modules>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_10" default="true" project-jdk-name="10" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+  <component name="VcsDirectoryMappings">
+    <mapping directory="" vcs="Git" />
+  </component>
+  <component name="libraryTable">
+    <library name="mysql-connector-java-8.0.12">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/mysql-connector-java-8.0.12.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+  </component>
+</project>

@@ -6,7 +6,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 @WebServlet(name = "LoginServlet", urlPatterns = "/LoginServlet")
 public class LoginServlet extends HttpServlet {
@@ -55,13 +57,10 @@ public class LoginServlet extends HttpServlet {
                 PrintWriter out = response.getWriter();
                 out.println("<font>Either username or password is wrong. Please try again.</font>");
                 rd.include(request, response);
-
-
             }
-
-
-        } catch (SQLException exc) {
-            exc.printStackTrace();
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
         }
 
 
