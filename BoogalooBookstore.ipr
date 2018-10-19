@@ -11,6 +11,7 @@
           </element>
           <element id="directory" name="lib">
             <element id="library" level="project" name="mysql-connector-java-8.0.12" />
+            <element id="library" level="project" name="commons-codec-1.11" />
           </element>
         </element>
       </root>
@@ -30,11 +31,34 @@
       </root>
     </artifact>
   </component>
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="@localhost" uuid="bba942dd-c6bd-4cf9-b011-baf4af708816">
+      <driver-ref>mysql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:3306</jdbc-url>
+      <driver-properties>
+        <property name="autoReconnect" value="true" />
+        <property name="zeroDateTimeBehavior" value="convertToNull" />
+        <property name="tinyInt1isBit" value="false" />
+        <property name="characterEncoding" value="utf8" />
+        <property name="characterSetResults" value="utf8" />
+        <property name="yearIsDateType" value="false" />
+      </driver-properties>
+    </data-source>
+  </component>
   <component name="InspectionProjectProfileManager">
     <profile version="1.0">
       <option name="myName" value="Project Default" />
     </profile>
     <version value="1.0" />
+  </component>
+  <component name="ProjectDictionaryState">
+    <dictionary name="Flidro">
+      <words>
+        <w>boogaloo</w>
+      </words>
+    </dictionary>
   </component>
   <component name="ProjectModuleManager">
     <modules>
@@ -44,10 +68,32 @@
   <component name="ProjectRootManager" version="2" languageLevel="JDK_10" default="true" project-jdk-name="10" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
+  <component name="SqlDialectMappings">
+    <file url="PROJECT" dialect="GenericSQL" />
+  </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
   </component>
+  <component name="dataSourceStorageLocal">
+    <data-source name="@localhost" uuid="bba942dd-c6bd-4cf9-b011-baf4af708816">
+      <database-info product="MySQL" version="8.0.12" jdbc-version="4.2" driver-name="MySQL Connector/J" driver-version="mysql-connector-java-8.0.12 (Revision: 24766725dc6e017025532146d94c6e6c488fb8f1)" family="MYSQL" exact-version="8.0.12">
+        <extra-name-characters>#@</extra-name-characters>
+        <identifier-quote-string>`</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower" />
+      <secret-storage>master_key</secret-storage>
+      <user-name>BoogalooBookstore_admin</user-name>
+      <introspection-schemas>*:@</introspection-schemas>
+    </data-source>
+  </component>
   <component name="libraryTable">
+    <library name="commons-codec-1.11">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/commons-codec-1.11.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
     <library name="mysql-connector-java-8.0.12">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/lib/mysql-connector-java-8.0.12.jar!/" />

@@ -6,9 +6,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Arrays;
 
 @WebServlet(name = "LoginServlet", urlPatterns = "/LoginServlet")
 public class LoginServlet extends HttpServlet {
@@ -18,51 +21,55 @@ public class LoginServlet extends HttpServlet {
         MySQLConnectionHandler connHandler = new MySQLConnectionHandler();
         Connection conn = connHandler.connection;
 
-        //get request params for username and psasword
+        //get request params for username and psasword, initialize salt and passwordHash
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+        byte[] passwordHash = new byte[32];
+        byte[] salt = new byte[32];
 
-        try (PreparedStatement statement = conn.prepareStatement("SELECT `username`, `email`, `password`, `user_id`, `first_name`, `last_name`, `delivery_address`, `delivery_city`, `delivery_state`, `delivery_zip`" +
+        try (PreparedStatement statement = conn.prepareStatement("SELECT `password`, `salt`" +
                 "FROM `asdfaser_users` WHERE `username` = ?")) {
             statement.setString(1, username);
             ResultSet rs = statement.executeQuery();
-//            rs.next();
+            rs.next();
+            passwordHash = MySQLConnectionHandler.stringToByte(rs.getString("password"));
+            salt = MySQLConnectionHandler.stringToByte(rs.getString("salt"));
+        } catch (SQLException exc) {
+            exc.printStackTrace();
+        }
 
-            if (rs.next()) {
-                if (password.equals(rs.getString(3)) && username.equals(rs.getString(1))) {
-                    //get old session and invalidate
-                    HttpSession oldSession = request.getSession(false);
-                    if (oldSession != null) {
-                        oldSession.invalidate();
-                    }
-                    //create a new session
-                    HttpSession newSession = request.getSession(true);
+        byte[] generatedHash = new byte[32];
+        try {
+            generatedHash = MySQLConnectionHandler.getHashWithSalt(password, "SHA-256", salt);
+        } catch (NoSuchAlgorithmException exc) {
+            exc.printStackTrace();
+        }
 
-                    //set new session to expire after 15 minutes
-                    newSession.setMaxInactiveInterval(15 * 60);
-
-                    //Create cookie
-                    Cookie message = new Cookie("message", "Welcome");
-                    response.addCookie(message);
-                    response.sendRedirect("/LoginSuccess.jsp");
-                } else {
-                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/index.jsp");
-                    PrintWriter out = response.getWriter();
-                    out.println("<font> Either username or password is wrong. Please try again.</font>");
-                    rd.include(request, response);
-
-                }
-            } else {
-                RequestDispatcher rd = getServletContext().getRequestDispatcher("/index.jsp");
-                PrintWriter out = response.getWriter();
-                out.println("<font>Either username or password is wrong. Please try again.</font>");
-                rd.include(request, response);
+        //Check generatedHash against passwordHash. If good, then invalidate previous session
+        // if there is one and create a new session and cookie. Afterwards, redirect to LoginSuccess
+        // If rejected, then return to index page and prompt again
+        if (Arrays.equals(generatedHash, passwordHash)) {
+            //get old session and invalidate
+            HttpSession oldSession = request.getSession(false);
+            if (oldSession != null) {
+                oldSession.invalidate();
             }
-        }
-        catch (Exception ex){
-            ex.printStackTrace();
-        }
+            //create a new session
+            HttpSession newSession = request.getSession(true);
 
+            //set new session to expire after 15 minutes
+            newSession.setMaxInactiveInterval(15 * 60);
 
+            //Create cookie
+            Cookie message = new Cookie("message", "Welcome");
+            response.addCookie(message);
+            response.sendRedirect(request.getContextPath() + "/LoginSuccess.jsp");
+        } else {
+            RequestDispatcher rd = getServletContext().getRequestDispatcher(request.getContextPath() + "/index.jsp");
+            PrintWriter out = response.getWriter();
+            out.println("<font color = red>Either username or password is wrong. Please try again.</font>");
+            rd.include(request, response);
+
+        }
     }
 }

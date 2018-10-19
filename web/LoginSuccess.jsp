@@ -24,7 +24,6 @@
 
 %>
 
-
 <h3>Login Success</h3>
 <h4><%=message%>
 </h4>

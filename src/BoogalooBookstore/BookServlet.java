@@ -21,9 +21,10 @@ public class BookServlet extends HttpServlet {
         Connection conn = connHandler.connection;
         PrintWriter out = response.getWriter();
 
-        try (PreparedStatement statement = conn.prepareStatement("SELECT * " +
+        try (PreparedStatement bookStatement = conn.prepareStatement("SELECT * " +
                 "FROM `adbadfb_books`")) {
-            ResultSet rs = statement.executeQuery();
+            ResultSet rs = bookStatement.executeQuery();
+            //format the table header
             out.print(
                     "<table>" +
                             "<tr>" +
@@ -33,36 +34,40 @@ public class BookServlet extends HttpServlet {
                             "<th>Units On Hand</th>" +
                             "<th>Unit Price</th>" +
                             "<th>Buy</th>" +
-                            "</tr>"
+                            "</tr>" +
+                            "<form action=\"CartServlet\" method=\"post\">"
             );
 
             while (rs.next()) {
 
-
+//https://www.html5tutorial.info/html5-number.php
                 out.print(
 
-                        "<tr>" +
-                                "<td>" + rs.getString(2) + "</td>" +
-                                "<td>" + rs.getString(3) + "</td>" +
-                                "<td>" + rs.getString(4) + "</td>" +
-                                "<td>" + rs.getString(7) + "</td>" +
-                                "<td>$ " + rs.getString(8) + "</td>" +
-                                "<td>placeholder buy button</td>" +
+                                "<tr>" +
+                                "<td>" + rs.getString(2) + "</td>" +    //ISBN
+                                "<td>" + rs.getString(3) + "</td>" +    //Book Name
+                                "<td>" + rs.getString(4) + "</td>" +    //Author
+                                "<td>" + rs.getString(7) + "</td>" +    //Units on Hand
+                                "<td>$ " + rs.getString(8) + "</td>" +  //Unit Price
+                                //Buy Section, number input box
+                                "<td><label for=\"inputNumOfBooks\"> Number of Books to Purchase: " +
+                                "</label><input id=\"inputNumOfBooks_" + rs.getString(2) + "type=\"number\" value=\"0\"/>" +
+                                "</td>" +
                                 "</tr>"
-
                 );
 
-            }
-            out.print("</table>");
+            } //end while
+            out.print("</table>" +
+                    "<br><br>" +
+                    "<input type=\"submit\" value=\"Add to cart\">" +
+                    "</form>"); //close book table
 
-
-            RequestDispatcher rd = getServletContext().getRequestDispatcher("/LoginSuccess.jsp");
-            rd.include(request, response);
         } catch (SQLException exc) {
             exc.printStackTrace();
         }
 
-
+        RequestDispatcher rd = getServletContext().getRequestDispatcher("/books.jsp");
+        rd.include(request, response);
     }
 }
 

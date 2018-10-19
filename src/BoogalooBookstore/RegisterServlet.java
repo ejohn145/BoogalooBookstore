@@ -4,6 +4,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -11,10 +12,11 @@ import java.sql.SQLException;
 @WebServlet(name = "RegisterServlet", urlPatterns = "/RegisterServlet")
 public class RegisterServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //Get request parameters for username and password
+        //Get request parameters for username and password and generate salt to be stored
         String username = request.getParameter("username");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
+        byte[] salt = MySQLConnectionHandler.generateSalt();
 
         MySQLConnectionHandler connHandler = new MySQLConnectionHandler();
         Connection conn = connHandler.connection;
@@ -22,11 +24,13 @@ public class RegisterServlet extends HttpServlet {
 
         try {
             prepStatement = conn.prepareStatement(
-                    "INSERT INTO `asdfaser_users`(`username`, `email`, `password`) VALUES (?, ?, ?)");
+                    "INSERT INTO `asdfaser_users`(`username`, `email`, `password`, `salt`) VALUES (?, ?, ?, ?)");
             prepStatement.setString(1, username);
             prepStatement.setString(2, email);
-            prepStatement.setString(3, password); //Todo Hash and salt ???
+            prepStatement.setString(3, MySQLConnectionHandler.byteToString(MySQLConnectionHandler.getHashWithSalt(password, "SHA-256", salt)));
+            prepStatement.setString(4, MySQLConnectionHandler.byteToString(salt));
             prepStatement.execute();
+
         } catch (SQLException exc) {
             System.out.println("SQLException: " + exc.getMessage());
         } catch (Exception exc) {
@@ -67,6 +71,6 @@ public class RegisterServlet extends HttpServlet {
         Cookie message = new Cookie("message", "Welcome");
         message.setMaxAge(30 * 60);
         response.addCookie(message);
-        response.sendRedirect("/LoginSuccess.jsp");
+        response.sendRedirect(request.getContextPath() + "/LoginSuccess.jsp");
     }
 }
